@@ -1,16 +1,18 @@
 #pragma once
 
-#include "binaryninjacore_global.h"
+#include "binaryninjaapi.h"
+#include "ffi_global.h"
 #include "refcountobject.h"
-#include "vendor/intx/intx.hpp"
 #include <atomic>
+#include <set>
+#include <functional>
+#include <string>
+#include <vector>
 
-DECLARE_CORE_API_OBJECT(BNILEmulator, ILEmulator);
+DECLARE_EMULATOR_API_OBJECT(BNILEmulator, ILEmulator);
 
-namespace BinaryNinjaCore
+namespace BinaryNinjaEmulator
 {
-	class BinaryView;
-
 	enum class ILEmulatorStopReason : uint8_t
 	{
 		Running = 0,
@@ -71,9 +73,9 @@ namespace BinaryNinjaCore
 		void Reset();
 	};
 
-	class ILEmulator : public RefCountObject
+	class ILEmulator : public EmuRefCountObject
 	{
-		IMPLEMENT_CORE_API_OBJECT(BNILEmulator)
+		IMPLEMENT_EMULATOR_API_OBJECT(BNILEmulator)
 
 	protected:
 		EmulatorMemory m_memory;
@@ -84,7 +86,7 @@ namespace BinaryNinjaCore
 		std::function<bool(ILEmulator*, size_t)> m_preInstructionHook;
 		std::function<void(ILEmulator*, const char*, size_t)> m_stdoutCallback;
 		std::function<size_t(ILEmulator*, char*, size_t)> m_stdinCallback;
-		set<uint64_t> m_breakpoints;
+		std::set<uint64_t> m_breakpoints;
 		size_t m_maxInstructions = 0;
 		size_t m_instructionsExecuted = 0;
 		size_t m_instrIndex = 0;

@@ -1,13 +1,10 @@
 #include "llilemulator.h"
-#include "architecture.h"
-#include "binaryview.h"
-#include "callingconvention.h"
-#include "databuffer.h"
-#include "platform.h"
-#include "log.h"
-#include "settings.h"
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 
-using namespace BinaryNinjaCore;
+using namespace BinaryNinja;
+using namespace BinaryNinjaEmulator;
 
 
 // ============================================================================
@@ -22,7 +19,7 @@ LLILEmulator::LLILEmulator(BinaryView* backingView) :
 	Ref<Settings> settings = Settings::Instance();
 	m_builtinLibcStubs = settings->Get<bool>("emulator.builtinLibcStubs");
 	m_logLibcCalls = settings->Get<bool>("emulator.logLibcCalls");
-	INIT_CORE_API_OBJECT();
+	INIT_EMULATOR_API_OBJECT();
 }
 
 
@@ -32,7 +29,7 @@ LLILEmulator::LLILEmulator(LowLevelILFunction* il, BinaryView* backingView) :
 	Ref<Settings> settings = Settings::Instance();
 	m_builtinLibcStubs = settings->Get<bool>("emulator.builtinLibcStubs");
 	m_logLibcCalls = settings->Get<bool>("emulator.logLibcCalls");
-	INIT_CORE_API_OBJECT();
+	INIT_EMULATOR_API_OBJECT();
 }
 
 
@@ -3397,25 +3394,25 @@ bool LLILEmulator::StubFread(uint64_t)
 
 BNLLILEmulator* BNCreateLLILEmulatorForView(BNBinaryView* view)
 {
-	return API_OBJECT_REF(new LLILEmulator(view->object));
+	return EMU_API_OBJECT_REF(new LLILEmulator(new BinaryView(BNNewViewReference(view))));
 }
 
 
 BNLLILEmulator* BNCreateLLILEmulator(BNLowLevelILFunction* il, BNBinaryView* view)
 {
-	return API_OBJECT_REF(new LLILEmulator(il->object, view->object));
+	return EMU_API_OBJECT_REF(new LLILEmulator(new LowLevelILFunction(BNNewLowLevelILFunctionReference(il)), new BinaryView(BNNewViewReference(view))));
 }
 
 
 BNLLILEmulator* BNNewLLILEmulatorReference(BNLLILEmulator* emu)
 {
-	return API_OBJECT_NEW_REF(emu);
+	return EMU_API_OBJECT_NEW_REF(emu);
 }
 
 
 void BNFreeLLILEmulator(BNLLILEmulator* emu)
 {
-	API_OBJECT_FREE(emu);
+	EMU_API_OBJECT_FREE(emu);
 }
 
 
@@ -3543,7 +3540,7 @@ bool BNLLILEmulatorSetEntryPoint(BNLLILEmulator* emu, uint64_t addr)
 
 void BNLLILEmulatorSetEntryPointForIL(BNLLILEmulator* emu, BNLowLevelILFunction* il, size_t instrIndex)
 {
-	emu->object->SetEntryPoint(il->object, instrIndex);
+	emu->object->SetEntryPoint(new LowLevelILFunction(BNNewLowLevelILFunctionReference(il)), instrIndex);
 }
 
 

@@ -1,6 +1,7 @@
 #include "ilemulator.h"
 
-using namespace BinaryNinjaCore;
+using namespace BinaryNinja;
+using namespace BinaryNinjaEmulator;
 
 
 // ============================================================================
@@ -206,7 +207,7 @@ void EmulatorMemory::Reset()
 
 ILEmulator::ILEmulator()
 {
-	INIT_CORE_API_OBJECT();
+	INIT_EMULATOR_API_OBJECT();
 }
 
 

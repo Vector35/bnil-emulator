@@ -1,19 +1,19 @@
 #pragma once
 
 #include "ilemulator.h"
-#include "lowlevelilfunction.h"
+#include "lowlevelilinstruction.h"
 
-DECLARE_CORE_API_OBJECT(BNLLILEmulator, LLILEmulator);
+DECLARE_EMULATOR_API_OBJECT(BNLLILEmulator, LLILEmulator);
 
-namespace BinaryNinjaCore
+namespace BinaryNinjaEmulator
 {
 	class LLILEmulator : public ILEmulator
 	{
-		IMPLEMENT_CORE_API_OBJECT(BNLLILEmulator)
+		IMPLEMENT_EMULATOR_API_OBJECT(BNLLILEmulator)
 
-		BinaryView* m_view;
-		Ref<LowLevelILFunction> m_il;
-		Architecture* m_arch;
+		BinaryNinja::BinaryView* m_view;
+		BinaryNinja::Ref<BinaryNinja::LowLevelILFunction> m_il;
+		BinaryNinja::Architecture* m_arch;
 
 		// LLIL-specific state
 		std::unordered_map<uint32_t, intx::uint512> m_registers;
@@ -23,8 +23,8 @@ namespace BinaryNinjaCore
 		// Call stack for cross-function emulation
 		struct CallFrame
 		{
-			Ref<LowLevelILFunction> il;
-			Architecture* arch;
+			BinaryNinja::Ref<BinaryNinja::LowLevelILFunction> il;
+			BinaryNinja::Architecture* arch;
 			size_t returnIndex;  // instruction index to resume in caller
 			std::unordered_map<uint32_t, intx::uint512> tempRegisters;  // saved caller temps
 		};
@@ -61,7 +61,7 @@ namespace BinaryNinjaCore
 		std::unordered_map<uint64_t, size_t> m_heapAllocations;
 
 		// Core dispatch
-		intx::uint512 EvalExpr(const LowLevelILInstruction& expr);
+		intx::uint512 EvalExpr(const BinaryNinja::LowLevelILInstruction& expr);
 		void ExecuteCurrentInstruction() override;
 		size_t GetInstructionCount() const override;
 		uint64_t GetCurrentInstructionAddress() const override;
@@ -137,11 +137,11 @@ namespace BinaryNinjaCore
 		bool StubFread(uint64_t dest);
 
 	public:
-		LLILEmulator(BinaryView* backingView);
-		LLILEmulator(LowLevelILFunction* il, BinaryView* backingView);
+		LLILEmulator(BinaryNinja::BinaryView* backingView);
+		LLILEmulator(BinaryNinja::LowLevelILFunction* il, BinaryNinja::BinaryView* backingView);
 
 		bool SetEntryPoint(uint64_t addr);
-		void SetEntryPoint(LowLevelILFunction* il, size_t instrIndex);
+		void SetEntryPoint(BinaryNinja::LowLevelILFunction* il, size_t instrIndex);
 
 		// Argument setup (uses default calling convention)
 		void SetArgument(size_t index, const intx::uint512& value);
@@ -158,8 +158,8 @@ namespace BinaryNinjaCore
 
 		void SetIntrinsicHook(IntrinsicHook hook);
 
-		LowLevelILFunction* GetFunction() const;
-		Architecture* GetArchitecture() const;
+		BinaryNinja::LowLevelILFunction* GetFunction() const;
+		BinaryNinja::Architecture* GetArchitecture() const;
 		size_t GetCallStackDepth() const;
 
 		struct CallStackEntry
@@ -183,7 +183,7 @@ namespace BinaryNinjaCore
 
 		// State serialization
 		std::string SaveState() const;
-		bool LoadState(const std::string& json, BinaryView* view);
-		BinaryView* GetView() const { return m_view; }
+		bool LoadState(const std::string& json, BinaryNinja::BinaryView* view);
+		BinaryNinja::BinaryView* GetView() const { return m_view; }
 	};
 }
