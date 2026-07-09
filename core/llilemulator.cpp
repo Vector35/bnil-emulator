@@ -2,7 +2,9 @@
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+#include "../api/ffi.h"
 
+using namespace std;
 using namespace BinaryNinja;
 using namespace BinaryNinjaEmulator;
 

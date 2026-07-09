@@ -1,5 +1,7 @@
 #include "ilemulator.h"
+#include "../api/ffi.h"
 
+using namespace std;
 using namespace BinaryNinja;
 using namespace BinaryNinjaEmulator;
 

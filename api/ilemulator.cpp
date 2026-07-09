@@ -19,6 +19,8 @@
 // IN THE SOFTWARE.
 
 #include "binaryninjaapi.h"
+#include "ffi.h"
+#include "emulatorapi.h"
 
 using namespace BinaryNinja;
 
