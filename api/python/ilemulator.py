@@ -21,10 +21,10 @@
 import ctypes
 from typing import Callable, Dict, List, Optional, Tuple
 
-from . import _binaryninjacore as core
-from .enums import ILEmulatorStopReason
-from . import binaryview
-from . import lowlevelil
+from . import _emulatorcore as core
+from .emulator_enums import ILEmulatorStopReason
+from binaryninja import binaryview
+from binaryninja import lowlevelil
 
 
 class LLILEmulator:
@@ -55,10 +55,12 @@ class LLILEmulator:
             LLILHandle = ctypes.POINTER(core.BNLLILEmulator)
             self.handle = ctypes.cast(handle, LLILHandle)
         elif il is not None:
-            self.handle = core.BNCreateLLILEmulator(il.handle, view.handle)
+            self.handle = core.BNCreateLLILEmulator(
+                ctypes.cast(il.handle, ctypes.POINTER(core.BNLowLevelILFunction)),
+                ctypes.cast(view.handle, ctypes.POINTER(core.BNBinaryView)))
             assert self.handle is not None, "Failed to create LLILEmulator"
         else:
-            self.handle = core.BNCreateLLILEmulatorForView(view.handle)
+            self.handle = core.BNCreateLLILEmulatorForView(ctypes.cast(view.handle, ctypes.POINTER(core.BNBinaryView)))
             assert self.handle is not None, "Failed to create LLILEmulator"
 
         self._arch = il.arch if il is not None else view.arch
@@ -193,7 +195,7 @@ class LLILEmulator:
         if instr_index is not None:
             # (LowLevelILFunction, index) form
             il = addr_or_il
-            core.BNLLILEmulatorSetEntryPointForIL(self.handle, il.handle, instr_index)
+            core.BNLLILEmulatorSetEntryPointForIL(self.handle, ctypes.cast(il.handle, ctypes.POINTER(core.BNLowLevelILFunction)), instr_index)
             self._arch = il.arch
             return True
         else:
