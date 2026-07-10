@@ -21,6 +21,7 @@
 import ctypes
 from typing import Callable, Dict, List, Optional, Tuple
 
+import binaryninja
 from . import _emulatorcore as core
 from .emulator_enums import ILEmulatorStopReason
 from binaryninja import binaryview
@@ -615,3 +616,28 @@ class LLILEmulator:
         """Load emulator state from a file."""
         with open(path, 'r') as f:
             return self.load_state(f.read())
+
+
+# One emulator is kept per BinaryView so the `emu` console variable retains its state
+# (registers, memory, breakpoints) across console commands, mirroring `dbg`. Unlike the
+# debugger's core-side get-or-create controller, LLILEmulator() always builds a fresh
+# emulator, so the persistence is provided here by caching on the view's core handle.
+_view_emulators: Dict[int, 'LLILEmulator'] = {}
+
+
+def _get_emulator(instance: 'binaryninja.PythonScriptingInstance') -> Optional['LLILEmulator']:
+    view = instance.interpreter.active_view
+    if view is None:
+        return None
+    key = ctypes.cast(view.handle, ctypes.c_void_p).value
+    emu = _view_emulators.get(key)
+    if emu is None:
+        emu = LLILEmulator(view)
+        _view_emulators[key] = emu
+    return emu
+
+
+binaryninja.PythonScriptingProvider.register_magic_variable(
+    "emu",
+    _get_emulator
+)
