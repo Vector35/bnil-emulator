@@ -18,6 +18,8 @@ set_target_properties(emulatorapi PROPERTIES
 		POSITION_INDEPENDENT_CODE ON
 		ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/out)
 
-if (NOT DEMO)
+# Python bindings retarget (load the emulatorcore plugin dylib) is pending; wire the
+# subdirectory only once api/python/CMakeLists.txt exists.
+if (NOT DEMO AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/python/CMakeLists.txt)
 	add_subdirectory(python)
 endif()
