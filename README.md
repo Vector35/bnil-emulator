@@ -8,6 +8,18 @@ API, exposes a C ABI, and ships C++ (`emulatorapi`) and Python bindings.
 > **Experimental.** This plugin is experimental and under active development; its API and
 > behavior may change.
 
+## Scope & accuracy
+
+This plugin emulates the given BNIL instructions — it is **not** meant to match the accuracy
+of full CPU emulators like [Unicorn](https://www.unicorn-engine.org/) or
+[QEMU](https://www.qemu.org/). Because emulation runs on Binary Ninja's *lifted* IL rather
+than the raw machine instructions, the emulated state may deviate from the actual state of
+the program during real execution.
+
+In practice it is aimed at focused tasks — decrypting strings, resolving API hashes, and
+similar snippet-level emulation. It is **not** intended for full-program or whole-system
+emulation.
+
 ## Layout
 
 - `core/` — the emulator engine (`ilemulator`, `llilemulator`) and plugin entry point,
