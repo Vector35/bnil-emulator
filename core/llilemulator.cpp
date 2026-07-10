@@ -72,11 +72,11 @@ void LLILEmulator::SetArgument(size_t index, const intx::uint512& value)
 	if (!m_view || !m_arch)
 		return;
 
-	Platform* platform = m_view->GetDefaultPlatform();
+	Ref<Platform> platform = m_view->GetDefaultPlatform();
 	if (!platform)
 		return;
 
-	CallingConvention* cc = platform->GetDefaultCallingConvention();
+	Ref<CallingConvention> cc = platform->GetDefaultCallingConvention();
 	if (!cc)
 		return;
 
@@ -1974,11 +1974,11 @@ uint64_t LLILEmulator::ReadArgument(size_t index)
 	if (!m_view)
 		return 0;
 
-	Platform* platform = m_view->GetDefaultPlatform();
+	Ref<Platform> platform = m_view->GetDefaultPlatform();
 	if (!platform)
 		return 0;
 
-	CallingConvention* cc = platform->GetDefaultCallingConvention();
+	Ref<CallingConvention> cc = platform->GetDefaultCallingConvention();
 	if (!cc)
 		return 0;
 
@@ -2001,11 +2001,11 @@ void LLILEmulator::WriteReturnValue(uint64_t value)
 	if (!m_view)
 		return;
 
-	Platform* platform = m_view->GetDefaultPlatform();
+	Ref<Platform> platform = m_view->GetDefaultPlatform();
 	if (!platform)
 		return;
 
-	CallingConvention* cc = platform->GetDefaultCallingConvention();
+	Ref<CallingConvention> cc = platform->GetDefaultCallingConvention();
 	if (!cc)
 		return;
 

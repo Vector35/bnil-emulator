@@ -11,9 +11,9 @@ namespace BinaryNinjaEmulator
 	{
 		IMPLEMENT_EMULATOR_API_OBJECT(BNLLILEmulator)
 
-		BinaryNinja::BinaryView* m_view;
+		BinaryNinja::Ref<BinaryNinja::BinaryView> m_view;
 		BinaryNinja::Ref<BinaryNinja::LowLevelILFunction> m_il;
-		BinaryNinja::Architecture* m_arch;
+		BinaryNinja::Ref<BinaryNinja::Architecture> m_arch;
 
 		// LLIL-specific state
 		std::unordered_map<uint32_t, intx::uint512> m_registers;
@@ -24,7 +24,7 @@ namespace BinaryNinjaEmulator
 		struct CallFrame
 		{
 			BinaryNinja::Ref<BinaryNinja::LowLevelILFunction> il;
-			BinaryNinja::Architecture* arch;
+			BinaryNinja::Ref<BinaryNinja::Architecture> arch;
 			size_t returnIndex;  // instruction index to resume in caller
 			std::unordered_map<uint32_t, intx::uint512> tempRegisters;  // saved caller temps
 		};
