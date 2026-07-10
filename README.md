@@ -45,8 +45,8 @@ Emulating an unsupported instruction stops the emulator with an `Unimplemented` 
   `CMP_ULE`, `CMP_UGE`, `CMP_UGT`
 - **Flags:** `FLAG`, `SET_FLAG`, `FLAG_BIT`, `FLAG_COND`, `FLAG_GROUP`
 - **Control flow:** `JUMP`, `JUMP_TO`, `GOTO`, `IF`, `CALL`, `CALL_STACK_ADJUST`, `TAILCALL`,
-  `RET`, `NORET`, `SYSCALL`
-- **Other:** `NOP`, `BP`, `TRAP`, `INTRINSIC`, `UNDEF`, `UNIMPL`, `UNIMPL_MEM`
+  `RET`, `NORET`
+- **Other:** `NOP`
 
 ### Not yet supported
 
@@ -57,4 +57,8 @@ Emulating an unsupported instruction stops the emulator with an `Unimplemented` 
   `REG_STACK_POP`, `REG_STACK_FREE_REG`, `REG_STACK_FREE_REL`
 - **Bit operations:** `BSWAP`, `CLZ`, `CTZ`, `CLS`, `POPCNT`, `RBIT`, `ABS`, `MINS`, `MAXS`,
   `MINU`, `MAXU`
+- **System / hooks** (no built-in semantics — stop unless the embedding code registers a
+  hook): `SYSCALL`, `INTRINSIC`
+- **Halting / non-representable** (stop the emulator): `BP`, `TRAP`, `UNDEF`, `UNIMPL`,
+  `UNIMPL_MEM`
 - **Other:** `ASSERT`, `FORCE_VER`, `CALL_PARAM`
